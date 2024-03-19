@@ -3,7 +3,7 @@ import json
 parser: Parser = Parser()
 code: str = '''
 Obesity {
-    pregnancies : 1,
+    pregnancies : (1+2),
     diagnosis : 2,
     treatment : 2,
     glucose : 2,
@@ -12,7 +12,7 @@ Obesity {
     insulin : 2,
     bmi : 2,
     diabetesPedigreeFunction : 2,
-    age : 3*2,
+    age : (2+3)*2,
 }'''
 
 result: dict = parser.parse(code)

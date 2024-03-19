@@ -10,19 +10,22 @@ OBESE_DECLARATORS_TOKENS: list = [
 Tokens: list[list[str]] = [
     [r"\A\s+", "WHITESPACE"],
     [r"\A," , ","],
+    [r"\A[(]", "("],
+    [r"\A[)]", ")"],
     [r"\A[{]", "{"],
     [r"\A[}]", "}"],
     [r"\A\bObesity\b", "MAIN_STRUCT"],
     [r'\A"""([\s\S]*?)"""', "BCOMMENT"],
     [r"\A\#.*$", "COMMENT"],
     [r'\A:(?!:)', "DECLARATOR_OPERATOR"],
+    [r'\A[+\-]', "ADDITIVE_OPERATOR"],
+    [r'\A[*\/]', "MULTIPLICATIVE_OPERATOR"],
     [r"\A\d+", "NUMBER"],
     [r'\A"[^"]*"', "STRING"],
     [r"\A'[^'']*'", "STRING"]
     # [r'^\"(?:[^"\\]|\\.)*"', "STRING"],
     # [r"^\'(?:[^'\\]|\\.)*'", "STRING"],
 ]
-
 
 
 class Tokenizer:
