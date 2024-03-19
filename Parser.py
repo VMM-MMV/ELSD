@@ -9,12 +9,14 @@ class Parser:
 
         return self.Program()
     
+    # Program : Obesity
     def Program(self) -> dict:
         return {
             "type": "Program",
             "body": self.Obesesity()
         }
     
+    # Obesity : MAIN_STRUCT '{' StatementList '}'
     def Obesesity(self) -> dict:
         name: str = self._eat("MAIN_STRUCT")
         self._eat("{")
@@ -27,9 +29,9 @@ class Parser:
             "declarations": declarations
         }
     
-    # StatementList : Statement | StatementList Statement
+    # StatementList : Statement | StatementList Statement | None
     def StatementList(self):
-        statementList = []
+        statementList: list = []
         
         while self._lookahead != None:
             if self._lookahead["type"] == "}":
@@ -38,32 +40,22 @@ class Parser:
         
         return statementList
 
-    # Statement : ExpressionStatement
+    # Statement : VariableDeclaration
     def Statement(self):
-        if self._lookahead["type"] == "DECLARATOR":
-            return self.VariableDeclaration()
-
-        # return self.ExpressionStatement()
+        return self.VariableDeclaration()
     
-    # ExpressionStatement : Expression ','
-    def ExpressionStatement(self) -> dict:
-        expression = self.Expression()
-        self._eat(",")
-        return {
-            "type": "ExpressionStatement",
-            "expression": expression
-        }
-    
+    # VariableDeclaration : VariableDeclarator ','
     def VariableDeclaration(self) -> dict:
-        declaration = self.VariableDeclarator()
+        declaration: dict = self.VariableDeclarator()
         self._eat(",")
         return {
             "type": "VariableDeclaration",
             "declarations": declaration
         }
     
+    # VariableDeclarator : DECLARATOR DECLARATOR_OPERATOR Expression
     def VariableDeclarator(self) -> dict:
-        declarator_token = self._eat("DECLARATOR")
+        declarator_token: dict = self._eat("DECLARATOR")
         self._eat("DECLARATOR_OPERATOR")
         literal = self.Expression()
         return {
@@ -72,10 +64,11 @@ class Parser:
             "init": literal
         }
     
-    # Expression : Literal ;
+    # Expression : BinaryExpression ,
     def Expression(self):
         return self.BinaryExpression()
     
+    # BinaryExpression | MultiplicativeExpression | MultiplicativeExpression ADDITIVE_OPERATOR MultiplicativeExpression
     def BinaryExpression(self):
         left = self.MultiplicativeExpression()
 
@@ -91,20 +84,9 @@ class Parser:
                 "right": right
             }
 
-        while self._lookahead["type"] == "EQUAL_OPERATOR":
-            operator = self._eat("EQUAL_OPERATOR")
-
-            right = self.BinaryExpression()
-
-            left = {
-                "type": "BinaryExpression",
-                "left": left,
-                "operator": operator,
-                "right": right
-            }
-
         return left
     
+    # MultiplicativeExpression : PrimaryExpression | PrimaryExpression MULTIPLICATIVE_OPERATOR PrimaryExpression
     def MultiplicativeExpression(self):
         left = self.PrimaryExpression()
 
@@ -121,11 +103,13 @@ class Parser:
             }
         return left
     
+    # PrimaryExpression : ParanthesizedExpression | Literal
     def PrimaryExpression(self):
         match self._lookahead["type"]:
             case "(": return self.ParanthesizedExpression()
             case _: return self.Literal()
 
+    # ParanthesizedExpression : '(' Expression ')'
     def ParanthesizedExpression(self):
         self._eat("(")
         expression = self.Expression()
@@ -138,6 +122,7 @@ class Parser:
             case "STRING": return self.StringLiteral()
             case "NUMBER": return self.NumericLiteral()
 
+    # NumericLiteral : NUMBER
     def NumericLiteral(self) -> dict:
         token = self._eat("NUMBER")
         return {
@@ -145,6 +130,7 @@ class Parser:
             "value": int(token["value"])
         }
     
+    # StringLiteral : STRING
     def StringLiteral(self) -> dict:
         token = self._eat("STRING")
         return {
