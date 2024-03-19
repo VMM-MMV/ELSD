@@ -13,11 +13,11 @@ class Parser:
     def Program(self) -> dict:
         return {
             "type": "Program",
-            "body": self.Obesesity()
+            "body": self.Obesity()
         }
     
     # Obesity : MAIN_STRUCT '{' StatementList '}'
-    def Obesesity(self) -> dict:
+    def Obesity(self) -> dict:
         name: str = self._eat("MAIN_STRUCT")
         self._eat("{")
         declarations: list = self.StatementList()
