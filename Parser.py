@@ -12,29 +12,43 @@ class Parser:
     def Program(self) -> dict:
         return {
             "type": "Program",
-            "body": self.StatementList()
+            "body": self.Obesesity()
         }
     
-    # StatementList : Statement | StatementList Statement ;
-    def StatementList(self) -> list:
-        statementList: list = []
+    def Obesesity(self) -> dict:
+        name: str = self._eat("MAIN_STRUCT")
+        self._eat("{")
+        declarations: list = self.StatementList()
+        self._eat("}")
+
+        return {
+            "type": "MAIN_STRUCT",
+            "name": name,
+            "declarations": declarations
+        }
+    
+    # StatementList : Statement | StatementList Statement
+    def StatementList(self):
+        statementList = []
         
         while self._lookahead != None:
+            if self._lookahead["type"] == "}":
+                break
             statementList.append(self.Statement())
         
         return statementList
 
-    # Statement : ExpressionStatement ;
+    # Statement : ExpressionStatement
     def Statement(self):
         if self._lookahead["type"] == "DECLARATOR":
             return self.VariableDeclaration()
 
-        return self.ExpressionStatement()
+        # return self.ExpressionStatement()
     
-    # ExpressionStatement : Expression ';' ;
+    # ExpressionStatement : Expression ','
     def ExpressionStatement(self) -> dict:
         expression = self.Expression()
-        self._eat(";")
+        self._eat(",")
         return {
             "type": "ExpressionStatement",
             "expression": expression
@@ -42,7 +56,7 @@ class Parser:
     
     def VariableDeclaration(self) -> dict:
         declaration = self.VariableDeclarator()
-        self._eat(";")
+        self._eat(",")
         return {
             "type": "VariableDeclaration",
             "declarations": declaration
@@ -51,7 +65,7 @@ class Parser:
     def VariableDeclarator(self) -> dict:
         declarator_token = self._eat("DECLARATOR")
         self._eat("DECLARATOR_OPERATOR")
-        literal = self.Literal()
+        literal = self.Expression()
         return {
             "type": "VariableDeclarator",
             "id": declarator_token["value"],
@@ -59,10 +73,66 @@ class Parser:
         }
     
     # Expression : Literal ;
-    def Expression(self) -> dict:
-        return self.Literal()
+    def Expression(self):
+        return self.BinaryExpression()
     
-    # Literal : NumericLiteral | StringLiteral ;
+    def BinaryExpression(self):
+        left = self.MultiplicativeExpression()
+
+        while self._lookahead["type"] == "ADDITIVE_OPERATOR":
+            operator = self._eat("ADDITIVE_OPERATOR")
+
+            right = self.MultiplicativeExpression()
+
+            left = {
+                "type": "BinaryExpression",
+                "left": left,
+                "operator": operator,
+                "right": right
+            }
+
+        while self._lookahead["type"] == "EQUAL_OPERATOR":
+            operator = self._eat("EQUAL_OPERATOR")
+
+            right = self.BinaryExpression()
+
+            left = {
+                "type": "BinaryExpression",
+                "left": left,
+                "operator": operator,
+                "right": right
+            }
+
+        return left
+    
+    def MultiplicativeExpression(self):
+        left = self.PrimaryExpression()
+
+        while self._lookahead["type"] == "MULTIPLICATIVE_OPERATOR":
+            operator = self._eat("MULTIPLICATIVE_OPERATOR")
+
+            right = self.PrimaryExpression()
+
+            left = {
+                "type": "BinaryExpression",
+                "left": left,
+                "operator": operator,
+                "right": right
+            }
+        return left
+    
+    def PrimaryExpression(self):
+        match self._lookahead["type"]:
+            case "(": return self.ParanthesizedExpression()
+            case _: return self.Literal()
+
+    def ParanthesizedExpression(self):
+        self._eat("(")
+        expression = self.Expression()
+        self._eat(")")
+        return expression
+        
+    # Literal : NumericLiteral | StringLiteral
     def Literal(self):
         match self._lookahead["type"]:
             case "STRING": return self.StringLiteral()

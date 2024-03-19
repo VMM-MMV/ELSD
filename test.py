@@ -1,4 +1,4 @@
-import re
+import re, os
 OBESE_DECLARATORS_TOKENS: list = [
     'pregnancies', 'diagnosis', 'treatment',
     'glucose', 'bloodPressure', 'skinThickness',

@@ -4,16 +4,18 @@ OBESE_DECLARATORS_TOKENS: list = [
     'pregnancies', 'diagnosis', 'treatment',
     'glucose', 'bloodPressure', 'skinThickness',
     'insulin', 'bmi', 'diabetesPedigreeFunction',
-    'age', 'outcome'
+    'age'
 ]
-
 
 Tokens: list[list[str]] = [
     [r"\A\s+", "WHITESPACE"],
-    [r"\A;" , ";"],
+    [r"\A," , ","],
+    [r"\A[{]", "{"],
+    [r"\A[}]", "}"],
+    [r"\A\bObesity\b", "MAIN_STRUCT"],
     [r'\A"""([\s\S]*?)"""', "BCOMMENT"],
     [r"\A\#.*$", "COMMENT"],
-    [r'\A=(?!=)', "DECLARATOR_OPERATOR"],
+    [r'\A:(?!:)', "DECLARATOR_OPERATOR"],
     [r"\A\d+", "NUMBER"],
     [r'\A"[^"]*"', "STRING"],
     [r"\A'[^'']*'", "STRING"]
@@ -37,13 +39,6 @@ class Tokenizer:
         
         curr_string: str = self._string[self._coursor:]
 
-        for declarator in OBESE_DECLARATORS_TOKENS:
-            declarator_match = re.search(r"\A\b{}\b".format(declarator), curr_string)
-            if declarator_match:
-                matched_declarator = declarator_match.group()
-                self._coursor += len(matched_declarator)
-                return {"type": "DECLARATOR", "value": matched_declarator}
-
         for regex, literal_type in Tokens:
             match = re.findall(regex, curr_string, flags=re.MULTILINE)
             
@@ -52,7 +47,7 @@ class Tokenizer:
 
             self._coursor += len(match[0])
 
-            if literal_type in ["WHITESPACE", "BCOMMENT","COMMENT", "NEWLINE"]:
+            if literal_type in ["WHITESPACE", "BCOMMENT","COMMENT"]:
                 if literal_type == "BCOMMENT":
                     self._coursor += 6
 
@@ -62,5 +57,12 @@ class Tokenizer:
                 "type": literal_type,
                 "value": match[0]
             }
+        
+        for declarator in OBESE_DECLARATORS_TOKENS:
+            declarator_match = re.search(r"\A\b{}\b".format(declarator), curr_string)
+            if declarator_match:
+                matched_declarator = declarator_match.group()
+                self._coursor += len(matched_declarator)
+                return {"type": "DECLARATOR", "value": matched_declarator}
         
         return None
