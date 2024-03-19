@@ -1,6 +1,11 @@
 import re
 
-
+OBESE_DECLARATORS_TOKENS: list = [
+    'pregnancies', 'diagnosis', 'treatment',
+    'glucose', 'bloodPressure', 'skinThickness',
+    'insulin', 'bmi', 'diabetesPedigreeFunction',
+    'age', 'outcome'
+]
 
 
 Tokens: list[list[str]] = [
@@ -8,17 +13,6 @@ Tokens: list[list[str]] = [
     [r"\A;" , ";"],
     [r'\A"""([\s\S]*?)"""', "BCOMMENT"],
     [r"\A\#.*$", "COMMENT"],
-    [r"\A\bpregnancies\b", "DECLARATOR"],
-    [r"\A\bdiagnosis\b", 'DECLARATOR'],
-    [r"\A\btreatment\b", 'DECLARATOR'],
-    [r"\A\bglucose\b", 'DECLARATOR'],
-    [r"\A\bbloodPressure\b", 'DECLARATOR'],
-    [r"\A\bskinThickness\b", 'DECLARATOR'],
-    [r"\A\binsulin\b", 'DECLARATOR'],
-    [r"\A\bbmi\b", 'DECLARATOR'],
-    [r"\A\bdiabetesPedigreeFunction\b", 'DECLARATOR'],
-    [r"\A\bage\b", 'DECLARATOR'],
-    [r"\A\boutcome\b", 'DECLARATOR'],
     [r'\A=(?!=)', "DECLARATOR_OPERATOR"],
     [r"\A\d+", "NUMBER"],
     [r'\A"[^"]*"', "STRING"],
@@ -43,8 +37,15 @@ class Tokenizer:
         
         curr_string: str = self._string[self._coursor:]
 
+        for declarator in OBESE_DECLARATORS_TOKENS:
+            declarator_match = re.search(r"\A\b{}\b".format(declarator), curr_string)
+            if declarator_match:
+                matched_declarator = declarator_match.group()
+                self._coursor += len(matched_declarator)
+                return {"type": "DECLARATOR", "value": matched_declarator}
+
         for regex, literal_type in Tokens:
-            match: list = re.findall(regex, curr_string, flags=re.MULTILINE)
+            match = re.findall(regex, curr_string, flags=re.MULTILINE)
             
             if len(match) == 0:
                 continue
