@@ -2,19 +2,21 @@ from Parser import *
 import json
 parser: Parser = Parser()
 code: str = '''
-Obesity {
-    pregnancies : (1+2),
-    diagnosis : 2,
-    treatment : 2,
-    glucose : 2,
-    bloodPressure : 2,
-    skinThickness : 2,
-    insulin : 2,
-    bmi : 2,
-    diabetesPedigreeFunction : 2,
-    age : (2+3)*2,
-}'''
-
+Create Template {
+    name: "Obesity",
+    params: {
+        pregnancies: "int",
+        glucose: "float",
+        bloodPressure: "float",
+        skinThickness: "float",
+        insulin: "float",
+        bmi: "float",
+        age: "float",
+    },
+    target: {diagnosis: "float",},
+} 
+'''
+# print(code[146:])
 result: dict = parser.parse(code)
 
 print(json.dumps(result, indent=2)) 

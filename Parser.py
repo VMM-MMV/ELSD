@@ -4,7 +4,6 @@ class Parser:
     def parse(self, string: str) -> dict:
         self._string: str = string
         self._tokenizer: Tokenizer = Tokenizer(string)
-
         self._lookahead: dict | None = self._tokenizer.getNextToken()
 
         return self.Program()
@@ -13,21 +12,9 @@ class Parser:
     def Program(self) -> dict:
         return {
             "type": "Program",
-            "body": self.Obesity()
+            "body": self.StatementList()
         }
     
-    # Obesity : MAIN_STRUCT '{' StatementList '}'
-    def Obesity(self) -> dict:
-        name: str = self._eat("MAIN_STRUCT")
-        self._eat("{")
-        declarations: list = self.StatementList()
-        self._eat("}")
-
-        return {
-            "type": "MAIN_STRUCT",
-            "name": name,
-            "declarations": declarations
-        }
     
     # StatementList : Statement | StatementList Statement | None
     def StatementList(self):
@@ -42,8 +29,51 @@ class Parser:
 
     # Statement : VariableDeclaration
     def Statement(self):
-        return self.VariableDeclaration()
+        match self._lookahead["type"]:
+            case "INIT_STRUCT": return self.InitStruct()
+            case             _: return self.VariableDeclaration()
     
+    # InitStruct : INIT_STRUCT '{' StatementList '}'
+    def InitStruct(self) -> dict:
+        self._eat("INIT_STRUCT")
+        self._eat("{")
+        name: str = self.StructName()
+        params: dict = self.StructParameters()
+        target: dict = self.StructTarget()
+        self._eat("}")
+
+        return {
+            "type": "MAIN_STRUCT",
+            "name": name,
+            "parameters": params,
+            "target": target
+        }
+    
+    def StructName(self):
+        self._eat("STRUCT_NAME")
+        self._eat("DECLARATOR_OPERATOR")
+        name = self.Expression()
+        self._eat(",")
+        return name["value"]
+    
+    def StructParameters(self):
+        self._eat("STRUCT_PARAMS")
+        self._eat("DECLARATOR_OPERATOR")
+        self._eat("{")
+        declarations: dict = self.StatementList()
+        self._eat("}")
+        self._eat(",")
+        return declarations
+
+    def StructTarget(self):
+        self._eat("STRUCT_TARGET")
+        self._eat("DECLARATOR_OPERATOR")
+        self._eat("{")
+        declarations: dict = self.VariableDeclaration()
+        self._eat("}")
+        self._eat(",")
+        return declarations
+
     # VariableDeclaration : VariableDeclarator ','
     def VariableDeclaration(self) -> dict:
         declaration: dict = self.VariableDeclarator()
@@ -142,12 +172,12 @@ class Parser:
         token = self._lookahead
 
         if token == None:
-            raise SyntaxError(f"Unexpected end of input, expected {tokenType}.") 
+            raise SyntaxError(f"Unexpected end of input, expected {tokenType}. At {self._tokenizer._coursor}") 
     
         if token["type"] != tokenType:
             print(self._string[self._tokenizer._coursor], self._tokenizer._coursor, self._lookahead)
             val = token["value"]
-            raise SyntaxError(f"Unexpected token {val}, expected {tokenType}.")
+            raise SyntaxError(f"Unexpected token {val}, expected {tokenType}. At {self._tokenizer._coursor}")
         
         self._lookahead = self._tokenizer.getNextToken()
 

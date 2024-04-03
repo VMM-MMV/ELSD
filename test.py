@@ -1,11 +1,18 @@
-import re, os
-OBESE_DECLARATORS_TOKENS: list = [
-    'pregnancies', 'diagnosis', 'treatment',
-    'glucose', 'bloodPressure', 'skinThickness',
-    'insulin', 'bmi', 'diabetesPedigreeFunction',
-    'age', 'outcome'
-]
+Create Template {
+    name: Obesity,
+    params: {
+        'pregnancies': int,
+        'glucose': float,
+        'bloodPressure': float,
+        'skinThickness': float,
+        'insulin': float,
+        'bmi': float,
+        'age': float
+    },
+    target: {'diagnosis': float}
+} 
 
-for declarator in OBESE_DECLARATORS_TOKENS:
-    declarator_match = re.findall(r"\A\b{}\b".format(declarator), "pregnancies")
-    print(declarator_match)
+Template Obesity {
+
+}
+
