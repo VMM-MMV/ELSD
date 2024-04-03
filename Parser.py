@@ -85,13 +85,21 @@ class Parser:
     
     # VariableDeclarator : DECLARATOR DECLARATOR_OPERATOR Expression
     def VariableDeclarator(self) -> dict:
-        declarator_token: dict = self._eat("DECLARATOR")
+        variable = self.Variable()
         self._eat("DECLARATOR_OPERATOR")
         literal = self.Expression()
         return {
             "type": "VariableDeclarator",
-            "id": declarator_token["value"],
+            "id": variable,
             "init": literal
+        }
+    
+    # Variable : VARIABLE ;
+    def Variable(self):
+        token = self._eat("VARIABLE")
+        return {
+            "type": "Variable",
+            "value": token["value"]
         }
     
     # Expression : BinaryExpression ,
@@ -136,6 +144,7 @@ class Parser:
     # PrimaryExpression : ParanthesizedExpression | Literal
     def PrimaryExpression(self):
         match self._lookahead["type"]:
+            case "VARIABLE": return self.Variable()
             case "(": return self.ParanthesizedExpression()
             case _: return self.Literal()
 
