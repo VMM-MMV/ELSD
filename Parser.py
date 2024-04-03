@@ -31,6 +31,7 @@ class Parser:
     def Statement(self):
         match self._lookahead["type"]:
             case "INIT_STRUCT": return self.InitStruct()
+            case  "NEW_STRUCT": return self.NewStruct()
             case             _: return self.VariableDeclaration()
     
     # InitStruct : INIT_STRUCT '{' StatementList '}'
@@ -73,6 +74,18 @@ class Parser:
         self._eat("}")
         self._eat(",")
         return declarations
+    
+    def NewStruct(self):
+        self._eat("NEW_STRUCT")
+        name = self.Variable()
+        self._eat("{")
+        params = self.StatementList()
+        self._eat("}")
+        return {
+            "type": "NEW_STRUCT",
+            "name": name["value"],
+            "declarations": params
+        }
 
     # VariableDeclaration : VariableDeclarator ','
     def VariableDeclaration(self) -> dict:

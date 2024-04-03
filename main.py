@@ -15,8 +15,13 @@ Create Template {
     },
     target: {diagnosis: float,},
 } 
+
+Template Obesity {
+    jora: 2,
+    vova: "3",
+}
 '''
-# print(code[146:])
 result: dict = parser.parse(code)
 
 print(json.dumps(result, indent=2)) 
+
