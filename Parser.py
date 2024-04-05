@@ -8,13 +8,12 @@ class Parser:
 
         return self.Program()
     
-    # Program : Obesity
+    # Program : StatementList
     def Program(self) -> dict:
         return {
             "type": "Program",
             "body": self.StatementList()
         }
-    
     
     # StatementList : Statement | StatementList Statement | None
     def StatementList(self):
@@ -27,7 +26,7 @@ class Parser:
         
         return statementList
 
-    # Statement : VariableDeclaration
+    # Statement : InitStruct | MethodCall | NewStruct | VariableDeclaration
     def Statement(self):
         match self._lookahead["type"]:
             case "INIT_STRUCT": return self.InitStruct()
@@ -35,7 +34,7 @@ class Parser:
             case "NEW_STRUCT" : return self.NewStruct()
             case             _: return self.VariableDeclaration()
     
-    # InitStruct : INIT_STRUCT '{' StatementList '}'
+    # InitStruct : INIT_STRUCT '{' StructName StructParameters StructTarget StructData '}'
     def InitStruct(self) -> dict:
         self._eat("INIT_STRUCT")
         self._eat("{")
@@ -53,12 +52,14 @@ class Parser:
             "data_path": data_path
         }
     
+    # StructName : STRUCT_NAME DECLARATOR_OPERATOR Expression
     def StructName(self):
         self._eat("STRUCT_NAME")
         self._eat("DECLARATOR_OPERATOR")
         name = self.Expression()
         return name["value"]
     
+    # StructParameters : STRUCT_PARAMS DECLARATOR_OPERATOR '{' StatementList '}'
     def StructParameters(self):
         self._eat("STRUCT_PARAMS")
         self._eat("DECLARATOR_OPERATOR")
@@ -67,6 +68,7 @@ class Parser:
         self._eat("}")
         return declarations
 
+    # StructTarget : STRUCT_TARGET DECLARATOR_OPERATOR '{' VariableDeclaration '}'
     def StructTarget(self):
         self._eat("STRUCT_TARGET")
         self._eat("DECLARATOR_OPERATOR")
@@ -75,12 +77,14 @@ class Parser:
         self._eat("}")
         return declarations
 
+    # StructData : STRUCT_DATA DECLARATOR_OPERATOR Expression
     def StructData(self):
         self._eat("STRUCT_DATA")
         self._eat("DECLARATOR_OPERATOR")
         name = self.Expression()
         return name["value"]
     
+    # NewStruct : NEW_STRUCT Variable DECLARATOR_OPERATOR Variable '{' StatementList '}'
     def NewStruct(self):
         self._eat("NEW_STRUCT")
         name = self.Variable()
@@ -96,6 +100,7 @@ class Parser:
             "declarations": params
         }
     
+    # MethodCall : METHOD_CALL
     def MethodCall(self):
         method_call = self._lookahead["value"]
         self._eat("METHOD_CALL")
@@ -106,7 +111,7 @@ class Parser:
             "method_name": method_name 
         }
 
-    # VariableDeclaration : VariableDeclarator ','
+    # VariableDeclaration : VariableDeclarator
     def VariableDeclaration(self) -> dict:
         declaration: dict = self.VariableDeclarator()
         return {
@@ -125,7 +130,7 @@ class Parser:
             "init": literal
         }
     
-    # Variable : VARIABLE ;
+    # Variable : VARIABLE
     def Variable(self):
         token = self._eat("VARIABLE")
         return {
@@ -133,7 +138,7 @@ class Parser:
             "value": token["value"]
         }
     
-    # Expression : BinaryExpression ,
+    # Expression : BinaryExpression
     def Expression(self):
         return self.BinaryExpression()
     
