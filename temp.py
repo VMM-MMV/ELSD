@@ -141,18 +141,17 @@ class Parser:
     def BinaryExpression(self):
         left = self.MultiplicativeExpression()
 
-        if self._lookahead:
-            while self._lookahead["type"] == "ADDITIVE_OPERATOR":
-                operator = self._eat("ADDITIVE_OPERATOR")
+        while self._lookahead["type"] == "ADDITIVE_OPERATOR":
+            operator = self._eat("ADDITIVE_OPERATOR")
 
-                right = self.MultiplicativeExpression()
+            right = self.MultiplicativeExpression()
 
-                left = {
-                    "type": "BinaryExpression",
-                    "left": left,
-                    "operator": operator,
-                    "right": right
-                }
+            left = {
+                "type": "BinaryExpression",
+                "left": left,
+                "operator": operator,
+                "right": right
+            }
 
         return left
     
@@ -160,18 +159,17 @@ class Parser:
     def MultiplicativeExpression(self):
         left = self.PrimaryExpression()
 
-        if self._lookahead:
-            while self._lookahead["type"] == "MULTIPLICATIVE_OPERATOR":
-                operator = self._eat("MULTIPLICATIVE_OPERATOR")
+        while self._lookahead["type"] == "MULTIPLICATIVE_OPERATOR":
+            operator = self._eat("MULTIPLICATIVE_OPERATOR")
 
-                right = self.PrimaryExpression()
+            right = self.PrimaryExpression()
 
-                left = {
-                    "type": "BinaryExpression",
-                    "left": left,
-                    "operator": operator,
-                    "right": right
-                }
+            left = {
+                "type": "BinaryExpression",
+                "left": left,
+                "operator": operator,
+                "right": right
+            }
         return left
     
     # PrimaryExpression : ParanthesizedExpression | Literal
