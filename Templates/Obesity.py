@@ -1,4 +1,4 @@
-
+import pandas as pd
 class Obesity:
     def __init__(self, pregnancies: int, glucose: float, bloodPressure: float, skinThickness: float, insulin: float, bmi: float, age: float, diagnosis: float):
 
@@ -10,7 +10,7 @@ class Obesity:
         self.bmi = float(bmi)
         self.age = float(age)
         self.target = float(diagnosis)
-        self.data_path = str("C:\Users\Jora\Medic")
+        self.data_path = str(r"C:\Users\Jora\Medic")
     
     def visualize(self):
         return "Here Add Vizualization Type Stuff"

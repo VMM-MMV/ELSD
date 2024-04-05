@@ -4,20 +4,11 @@ import os
 import textwrap
 parser: Parser = Parser()
 code: str = r"""
-Create Template {
-    name: Obesity
-    params: {
-        pregnancies: int
-        glucose: float
-        bloodPressure: float
-        skinThickness: float
-        insulin: float
-        bmi: float
-        age: float
-    }
-    target: {diagnosis: float}
-    data: "C:\Users\Jora\Medic"
+declare Person = Obesity {
+    jora: 2 + 3
+    vova: "vova"
 }
+a = 5
 """
 result: dict = parser.parse(code)
     
@@ -56,12 +47,13 @@ def load(self):
         node = node["declarations"]
         return self.getIndent(indent) + f"{node['id']['value']} = {self.handleBinaryExpression(node['init'])}"
     
-    def handleClassInitialization(self, node, indent):
+    def handleClassCreation(self, node, indent):
         class_code = "\n" + self.getIndent(indent) + "class " + node["name"] + ":" + "\n"
         indent += 4
         class_parameters_code = self.getIndent(indent) + "def __init__(self"
         class_body_code = ""
         indent += 3
+
         for parameter in node["parameters"]:
             parameters = self.handleVariableDeclaration(parameter, indent)
             var_name, var_type = [x.strip() for x in parameters.split(" = ")]
@@ -73,20 +65,34 @@ def load(self):
         class_parameters_code += f", {var_name}: {var_type}"
         class_body_code += "\n" + self.getIndent(indent+1) + f"self.target = {var_type}({var_name})"
 
-        class_body_code += "\n" + self.getIndent(indent+1) + f"self.data_path = str({node['data_path']})"
+        class_body_code += "\n" + self.getIndent(indent+1) + f"self.data_path = str(r{node['data_path']})"
         
         class_parameters_code += "):"
         class_code += class_parameters_code + "\n"
         class_code += class_body_code + "\n"
         class_code += self.ClassMethods(indent=indent-3)
         templates_path = "Templates"
+
         if not os.path.exists(templates_path):
             os.mkdir(templates_path)
+
         with open(f"{templates_path}/{node['name']}.py", "w+") as f:
             f.write(class_code)
         return class_code
-        # print(class_code)
 
+    def handleClassInitialization(self, node, indent):
+        class_init_code = f"from Templates.{node['class_type']} import * \n"
+        class_init_code += f"{node['name']} = {node['class_type']}("
+
+        indent += 3
+
+        for parameter in node["declarations"]:
+            parameters = self.handleVariableDeclaration(parameter, indent)
+            var_name, var_type = [x.strip() for x in parameters.split(" = ")]
+            class_init_code += f"{var_name} = {var_type}, "
+        class_init_code = class_init_code[:-2]
+        class_init_code += ")"
+        return class_init_code
         
     def handleBlock(self, node, indent):
         self.code = ""
@@ -105,6 +111,11 @@ def load(self):
                 return
 
             if node["type"] == "InitStruct":
+                self.code += "\n"
+                self.code += self.getIndent(indent) + str(self.handleClassCreation(node, indent))
+                return
+
+            if node["type"] == "NewStruct":
                 self.code += "\n"
                 self.code += self.getIndent(indent) + str(self.handleClassInitialization(node, indent))
                 return
@@ -129,4 +140,5 @@ def load(self):
 
 compiler = Compiler()
 code = compiler.handleBlock(result, 0)
+exec(code)
 print(code)

@@ -2,24 +2,24 @@ from Parser import *
 import json
 parser: Parser = Parser()
 code: str = r"""
-# declare Person = Obesity {
-#     jora: 2 + 3
-#     vova: "vova"
-# }
-Create Template {
-    name: Obesity
-    params: {
-        pregnancies: int
-        glucose: float
-        # bloodPressure: float
-        # skinThickness: float
-        # insulin: float
-        # bmi: float
-        # age: float
-    }
-    target: {diagnosis: float}
-    data: "C:\Users\Jora\Medic"
+declare Person = Obesity {
+    jora: 2 + 3
+    vova: "vova"
 }
+# Create Template {
+#     name: Obesity
+#     params: {
+#         pregnancies: int
+#         glucose: float
+#         # bloodPressure: float
+#         # skinThickness: float
+#         # insulin: float
+#         # bmi: float
+#         # age: float
+#     }
+#     target: {diagnosis: float}
+#     data: "C:\Users\Jora\Medic"
+# }
 
 vova = "6"
 """
