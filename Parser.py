@@ -31,7 +31,8 @@ class Parser:
     def Statement(self):
         match self._lookahead["type"]:
             case "INIT_STRUCT": return self.InitStruct()
-            case  "NEW_STRUCT": return self.NewStruct()
+            case "METHOD_CALL": return self.MethodCall()
+            case "NEW_STRUCT" : return self.NewStruct()
             case             _: return self.VariableDeclaration()
     
     # InitStruct : INIT_STRUCT '{' StatementList '}'
@@ -86,6 +87,17 @@ class Parser:
             "class_type": class_type["value"],
             "declarations": params
         }
+    
+    def MethodCall(self):
+        method_call = self._lookahead["value"]
+        self._eat("METHOD_CALL")
+        class_type, method_name = method_call.split(".")
+        return {
+            "type": "METHOD_CALL",
+            "class_type": class_type,
+            "method_name": method_name 
+        }
+
 
     # VariableDeclaration : VariableDeclarator ','
     def VariableDeclaration(self) -> dict:

@@ -1,12 +1,5 @@
 import re
 
-OBESE_DECLARATORS_TOKENS: list = [
-    'pregnancies', 'diagnosis', 'treatment',
-    'glucose', 'bloodPressure', 'skinThickness',
-    'insulin', 'bmi', 'diabetesPedigreeFunction',
-    'age'
-]
-
 Tokens: list[list[str]] = [
     [r"\A\s+", "WHITESPACE"],
     [r"\A," , ","],
@@ -19,6 +12,7 @@ Tokens: list[list[str]] = [
     [r"\A\bparams\b", "STRUCT_PARAMS"],
     [r"\A\btarget\b", "STRUCT_TARGET"],
     [r"\A\bdeclare\b", "NEW_STRUCT"],
+    [r'\A\w+\.\w+', "METHOD_CALL"],
     [r'\A"""([\s\S]*?)"""', "BCOMMENT"],
     [r"\A\#.*$", "COMMENT"],
     [r'\A:(?!:)', "DECLARATOR_OPERATOR"],
@@ -66,12 +60,5 @@ class Tokenizer:
                 "type": literal_type,
                 "value": match[0]
             }
-        
-        for declarator in OBESE_DECLARATORS_TOKENS:
-            declarator_match = re.search(r"\A\b{}\b".format(declarator), curr_string)
-            if declarator_match:
-                matched_declarator = declarator_match.group()
-                self._coursor += len(matched_declarator)
-                return {"type": "DECLARATOR", "value": matched_declarator}
         
         return None
