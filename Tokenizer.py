@@ -11,6 +11,7 @@ Tokens: list[list[str]] = [
     [r"\A\bname\b", "STRUCT_NAME"],
     [r"\A\bparams\b", "STRUCT_PARAMS"],
     [r"\A\btarget\b", "STRUCT_TARGET"],
+    [r"\A\bdata\b", "STRUCT_DATA"],
     [r"\A\bdeclare\b", "NEW_STRUCT"],
     [r'\A\w+\.\w+', "METHOD_CALL"],
     [r'\A"""([\s\S]*?)"""', "BCOMMENT"],

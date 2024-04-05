@@ -42,13 +42,15 @@ class Parser:
         name: str = self.StructName()
         params: dict = self.StructParameters()
         target: dict = self.StructTarget()
+        data_path: str = self.StructData()
         self._eat("}")
 
         return {
             "type": "MAIN_STRUCT",
             "name": name,
             "parameters": params,
-            "target": target
+            "target": target,
+            "data_path": data_path
         }
     
     def StructName(self):
@@ -72,6 +74,12 @@ class Parser:
         declarations: dict = self.VariableDeclaration()
         self._eat("}")
         return declarations
+
+    def StructData(self):
+        self._eat("STRUCT_DATA")
+        self._eat("DECLARATOR_OPERATOR")
+        name = self.Expression()
+        return name["value"]
     
     def NewStruct(self):
         self._eat("NEW_STRUCT")
@@ -97,7 +105,6 @@ class Parser:
             "class_type": class_type,
             "method_name": method_name 
         }
-
 
     # VariableDeclaration : VariableDeclarator ','
     def VariableDeclaration(self) -> dict:
