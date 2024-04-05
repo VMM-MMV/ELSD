@@ -1,4 +1,4 @@
-import pandas as pd
+
 class Obesity:
     def __init__(self, pregnancies: int, glucose: float, bloodPressure: float, skinThickness: float, insulin: float, bmi: float, age: float, diagnosis = None):
 

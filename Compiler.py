@@ -170,7 +170,8 @@ def load(self):
         walkAst(node, indent)
         return self.code
 
-compiler = Compiler()
-code = compiler.handleBlock(result, 0)
-print(code)
-exec(code)
+if __name__ == "__main__":
+    compiler = Compiler()
+    code = compiler.handleBlock(result, 0)
+    print(code)
+    exec(code)

@@ -1,0 +1,26 @@
+# Create Template {
+#     name: Obesity
+#     params: {
+#         pregnancies: int
+#         glucose: float
+#         bloodPressure: float
+#         skinThickness: float
+#         insulin: float
+#         bmi: float
+#         age: float
+#     }
+#     target: {diagnosis: float}
+#     data: "C:\Users\Jora\Medic"
+# }
+
+declare Person = Obesity {
+    pregnancies: 1
+    glucose: 1
+    bloodPressure: 1
+    skinThickness: 1
+    insulin: 1
+    bmi: 1
+    age: 1
+}
+
+Person.visualize
