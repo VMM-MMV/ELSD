@@ -75,12 +75,15 @@ class Parser:
     def NewStruct(self):
         self._eat("NEW_STRUCT")
         name = self.Variable()
+        self._eat("DECLARATOR_OPERATOR")
+        class_type = self.Variable()
         self._eat("{")
         params = self.StatementList()
         self._eat("}")
         return {
             "type": "NEW_STRUCT",
             "name": name["value"],
+            "class_type": class_type["value"],
             "declarations": params
         }
 

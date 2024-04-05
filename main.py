@@ -16,7 +16,7 @@ Create Template {
     target: {diagnosis: float}
 } 
 
-Template Obesity {
+declare Person = Obesity {
     jora: 2
     vova: "vova"
 }
