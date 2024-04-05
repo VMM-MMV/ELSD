@@ -4,10 +4,11 @@ import os
 import textwrap
 parser: Parser = Parser()
 code: str = r"""
-declare Person = Obesity {
-    jora: 2 + 3
-    vova: "vova"
-}
+# declare Person = Obesity {
+#     jora: 2 + 3
+#     vova: "vova"
+# }
+Person.jora
 a = 5
 """
 result: dict = parser.parse(code)
@@ -93,6 +94,9 @@ def load(self):
         class_init_code = class_init_code[:-2]
         class_init_code += ")"
         return class_init_code
+    
+    def handleMethodCall(self, node, indent):
+        return self.getIndent(indent) + f"{node['class_type']}.{node['method_name']}()"
         
     def handleBlock(self, node, indent):
         self.code = ""
@@ -120,6 +124,11 @@ def load(self):
                 self.code += self.getIndent(indent) + str(self.handleClassInitialization(node, indent))
                 return
             
+            if node["type"] == "MethodCall":
+                self.code += "\n"
+                self.code += self.getIndent(indent) + str(self.handleMethodCall(node, indent))
+                return
+            
             if node["type"] == "VariableDeclaration":
                 self.code += "\n"
                 self.code += self.getIndent(indent) + str(self.handleVariableDeclaration(node, indent))
@@ -140,5 +149,4 @@ def load(self):
 
 compiler = Compiler()
 code = compiler.handleBlock(result, 0)
-exec(code)
 print(code)
