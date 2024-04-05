@@ -4,12 +4,32 @@ import os
 import textwrap
 parser: Parser = Parser()
 code: str = r"""
-# declare Person = Obesity {
-#     jora: 2 + 3
-#     vova: "vova"
+# Create Template {
+#     name: Obesity
+#     params: {
+#         pregnancies: int
+#         glucose: float
+#         bloodPressure: float
+#         skinThickness: float
+#         insulin: float
+#         bmi: float
+#         age: float
+#     }
+#     target: {diagnosis: float}
+#     data: "C:\Users\Jora\Medic"
 # }
-Person.jora
-a = 5
+
+declare Person = Obesity {
+    pregnancies: 1
+    glucose: 1
+    bloodPressure: 1
+    skinThickness: 1
+    insulin: 1
+    bmi: 1
+    age: 1
+}
+
+Person.visualize
 """
 result: dict = parser.parse(code)
     
@@ -19,10 +39,10 @@ class Compiler:
     def ClassMethods(self, indent):
         code_block = """
 def visualize(self):
-    return "Here Add Vizualization Type Stuff"
+    print("Here Add Vizualization Type Stuff")
 
 def predict(self):
-    return "Here Add Data Science Type Stuff"
+    print("Here Add Data Science Type Stuff")
 
 def load(self):
     return pd.load(self.data_path)
@@ -63,8 +83,10 @@ def load(self):
             
         target = self.handleVariableDeclaration(node["target"], indent)
         var_name, var_type = [x.strip() for x in target.split(" = ")]
-        class_parameters_code += f", {var_name}: {var_type}"
-        class_body_code += "\n" + self.getIndent(indent+1) + f"self.target = {var_type}({var_name})"
+        # TODO add vartype to check which type of regression to do
+        # int thefore logistic, float linear
+        class_parameters_code += f", {var_name} = None"
+        class_body_code += "\n" + self.getIndent(indent+1) + f"self.target: {var_type} = '{var_name}'"
 
         class_body_code += "\n" + self.getIndent(indent+1) + f"self.data_path = str(r{node['data_path']})"
         
@@ -76,6 +98,7 @@ def load(self):
 
         if not os.path.exists(templates_path):
             os.mkdir(templates_path)
+            os.mknod(templates_path+"/__init__.py")
 
         with open(f"{templates_path}/{node['name']}.py", "w+") as f:
             f.write(class_code)
@@ -150,3 +173,4 @@ def load(self):
 compiler = Compiler()
 code = compiler.handleBlock(result, 0)
 print(code)
+exec(code)
