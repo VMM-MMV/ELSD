@@ -1,5 +1,6 @@
 from temp import *
 import json
+import os
 import textwrap
 parser: Parser = Parser()
 code: str = r"""
@@ -31,7 +32,7 @@ def visualize(self):
 def predict(self):
     return "Here Add Data Science Type Stuff"
 
-def load(self)
+def load(self):
     return pd.load(self.data_path)
     
 """
@@ -57,10 +58,10 @@ def load(self)
     
     def handleClassInitialization(self, node, indent):
         class_code = "\n" + self.getIndent(indent) + "class " + node["name"] + ":" + "\n"
-        indent += 2
+        indent += 4
         class_parameters_code = self.getIndent(indent) + "def __init__(self"
         class_body_code = ""
-        indent += 2
+        indent += 3
         for parameter in node["parameters"]:
             parameters = self.handleVariableDeclaration(parameter, indent)
             var_name, var_type = [x.strip() for x in parameters.split(" = ")]
@@ -77,7 +78,12 @@ def load(self)
         class_parameters_code += "):"
         class_code += class_parameters_code + "\n"
         class_code += class_body_code + "\n"
-        class_code += self.ClassMethods(indent=indent-2)
+        class_code += self.ClassMethods(indent=indent-3)
+        templates_path = "Templates"
+        if not os.path.exists(templates_path):
+            os.mkdir(templates_path)
+        with open(f"{templates_path}/{node['name']}.py", "w+") as f:
+            f.write(class_code)
         return class_code
         # print(class_code)
 
