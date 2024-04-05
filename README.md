@@ -1,28 +1,51 @@
 Grammar:
 ```
-<Program> ::= "MAIN_STRUCT" "{" <StatementList> "}"
+<Program>           ::= "Program" "{" <StatementList> "}"
 
-<StatementList> ::= <Statement> | <Statement> <StatementList> | ε
+<StatementList>     ::= <Statement> <StatementList>
+                      | <Statement>
 
-<Statement> ::= <VariableDeclaration>
+<Statement>         ::= <InitStruct>
+                      | <MethodCall>
+                      | <NewStruct>
+                      | <VariableDeclaration>
 
-<VariableDeclaration> ::= <VariableDeclarator> ","
+<InitStruct>        ::= "INIT_STRUCT" "{" <StructName> <StructParameters> <StructTarget> <StructData> "}"
+
+<StructName>        ::= "STRUCT_NAME" "DECLARATOR_OPERATOR" <Expression>
+
+<StructParameters>  ::= "STRUCT_PARAMS" "DECLARATOR_OPERATOR" "{" <StatementList> "}"
+
+<StructTarget>      ::= "STRUCT_TARGET" "DECLARATOR_OPERATOR" "{" <VariableDeclaration> "}"
+
+<StructData>        ::= "STRUCT_DATA" "DECLARATOR_OPERATOR" <Expression>
+
+<NewStruct>         ::= "NEW_STRUCT" <Variable> "DECLARATOR_OPERATOR" <Variable> "{" <StatementList> "}"
+
+<MethodCall>        ::= "METHOD_CALL"
+
+<VariableDeclaration> ::= <VariableDeclarator>
 
 <VariableDeclarator> ::= "DECLARATOR" "DECLARATOR_OPERATOR" <Expression>
 
-<Expression> ::= <BinaryExpression>
+<Variable>          ::= "VARIABLE"
 
-<BinaryExpression> ::= <MultiplicativeExpression> | <MultiplicativeExpression> "ADDITIVE_OPERATOR" <MultiplicativeExpression>
+<Expression>        ::= <BinaryExpression>
 
-<MultiplicativeExpression> ::= <PrimaryExpression> | <PrimaryExpression> "MULTIPLICATIVE_OPERATOR" <PrimaryExpression>
+<BinaryExpression>  ::= <MultiplicativeExpression> <ADDITIVE_OPERATOR> <MultiplicativeExpression>
 
-<PrimaryExpression> ::= <ParanthesizedExpression> | <Literal>
+<MultiplicativeExpression> ::= <PrimaryExpression> <MULTIPLICATIVE_OPERATOR> <PrimaryExpression>
+
+<PrimaryExpression> ::= <ParanthesizedExpression>
+                      | <Literal>
+                      | <Variable>
 
 <ParanthesizedExpression> ::= "(" <Expression> ")"
 
-<Literal> ::= <StringLiteral> | <NumericLiteral>
+<Literal>           ::= <NumericLiteral>
+                      | <StringLiteral>
 
-<NumericLiteral> ::= "NUMBER"
+<NumericLiteral>    ::= "NUMBER"
 
-<StringLiteral> ::= "STRING"
+<StringLiteral>     ::= "STRING"
 ```
