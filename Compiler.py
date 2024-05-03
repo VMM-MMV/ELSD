@@ -21,12 +21,12 @@ code: str = r"""
 
 declare Person = Obesity {
     pregnancies: 1
-    glucose: 1
-    bloodPressure: 1
-    skinThickness: 1
-    insulin: 1
-    bmi: 1
-    age: 1
+    glucose: 110
+    bloodPressure: 50
+    skinThickness: 25
+    insulin: 100
+    # bmi: 1
+    age: 30
 }
 
 Person.visualize
@@ -39,7 +39,7 @@ class Compiler:
     def ClassMethods(self, indent):
         code_block = """
 def visualize(self):
-    print("Here Add Vizualization Type Stuff")
+    print("Here Add Vizualization Type Stuff or not")
 
 def predict(self):
     print("Here Add Data Science Type Stuff")
