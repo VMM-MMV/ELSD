@@ -2,7 +2,7 @@ import requests
 import json
 
 
-url = "https://8dee-34-139-17-105.ngrok-free.app/"
+url = "https://d612-34-139-17-105.ngrok-free.app/"
 
 class Obesity:
     def __init__(self, pregnancies=3.845, glucose=121.686763, bloodPressure=72.4, skinThickness=29.153, insulin=155.55, bmi=32.45, age=33.24, diagnosis = None):
@@ -17,14 +17,12 @@ class Obesity:
         self.data_path = str(r"C:\Users\Jora\Medic")
     
     def visualize(self):
-        # print("Here Add Vizualization Type Stuff or not maybe")
-        # print(self.pregnancies)
-        # print(self.glucose)
-        # print(self.bloodPressure)
-        # print(self.skinThickness)
-        # print(self.insulin)
-        # print(self.bmi)
-        # print(self.age)
+        print("Here Add Vizualization Type Stuff or not")
+
+       
+        
+
+    def predict(self):
         data = {
             "Pregnancies": self.pregnancies,
             "Glucose": self.glucose,
@@ -45,10 +43,6 @@ class Obesity:
         if float(response.text) < 0.5:
             status = "Healthy"
         print("    The person is",status)
-        
-
-    def predict(self):
-        print("Here Add Data Science Type Stuff")
 
     def load(self):
         return pd.load(self.data_path)

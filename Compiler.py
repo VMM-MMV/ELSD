@@ -5,15 +5,19 @@ import textwrap
 parser: Parser = Parser()
 code: str = r"""
 # Create Template {
-#     name: Obesity
+#     name: Heart_2
 #     params: {
-#         pregnancies: int
-#         glucose: float
-#         bloodPressure: float
-#         skinThickness: float
-#         insulin: float
-#         bmi: float
-#         age: float
+#         ST_Slope: str
+#         Oldpeak: float
+#         ExerciseAngina: str
+#         MaxHR: int
+#         RestingECG: str
+#         FastingBS: float
+#         Cholesterol: float
+#         RestingBP: int
+#         ChestPainType: str
+#         Sex: str
+#         Age: int
 #     }
 #     target: {diagnosis: float}
 #     data: "C:\Users\Jora\Medic"
@@ -29,7 +33,29 @@ declare Person = Obesity {
     age: 30
 }
 
-Person.visualize
+Person.predict
+
+# declare Person = Heart {
+#     # ST_Slope can be Up, Flat, Down 
+#     ST_Slope: 'Up'
+#     Oldpeak: 3
+#     # Exercise Angine can be N, Y
+#     ExerciseAngina: 'Y'
+#     MaxHR: 150
+#     # Resting ECG can be Normal, ST, LVH
+#     RestingECG: 'Normal'
+#     FastingBS: 120
+#     Cholesterol: 200
+#     RestingBP: 120
+#     # Chest Pain Type can be ATA, NAP, ASY, TA
+#     ChestPainType: 'ATA'
+#     # Sex can be M, F
+#     Sex: 'M'
+#     Age: 45
+# }
+
+# Person.predict
+
 """
 result: dict = parser.parse(code)
     
