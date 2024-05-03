@@ -17,14 +17,14 @@ class Obesity:
         self.data_path = str(r"C:\Users\Jora\Medic")
     
     def visualize(self):
-        print("Here Add Vizualization Type Stuff or not maybe")
-        print(self.pregnancies)
-        print(self.glucose)
-        print(self.bloodPressure)
-        print(self.skinThickness)
-        print(self.insulin)
-        print(self.bmi)
-        print(self.age)
+        # print("Here Add Vizualization Type Stuff or not maybe")
+        # print(self.pregnancies)
+        # print(self.glucose)
+        # print(self.bloodPressure)
+        # print(self.skinThickness)
+        # print(self.insulin)
+        # print(self.bmi)
+        # print(self.age)
         data = {
             "Pregnancies": self.pregnancies,
             "Glucose": self.glucose,
@@ -40,7 +40,11 @@ class Obesity:
         response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
 
         # Print the response
-        print(response.text)
+        # print(response.text)
+        status = "Sick"
+        if float(response.text) < 0.5:
+            status = "Healthy"
+        print("    The person is",status)
         
 
     def predict(self):
