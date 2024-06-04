@@ -1,37 +1,8 @@
-from temp import *
+from Parser import *
 import json
 import os
 import textwrap
 parser: Parser = Parser()
-code: str = r"""
-# Create Template {
-#     name: Obesity
-#     params: {
-#         pregnancies: int
-#         glucose: float
-#         bloodPressure: float
-#         skinThickness: float
-#         insulin: float
-#         bmi: float
-#         age: float
-#     }
-#     target: {diagnosis: float}
-#     data: "C:\Users\Jora\Medic"
-# }
-
-declare Person = Obesity {
-    pregnancies: 1
-    glucose: 1
-    bloodPressure: 1
-    skinThickness: 1
-    insulin: 1
-    bmi: 1
-    age: 1
-}
-
-Person.visualize
-"""
-result: dict = parser.parse(code)
     
 class Compiler:
     def getIndent(self, indent):
@@ -44,9 +15,9 @@ def visualize(self):
 def predict(self):
     print("Here Add Data Science Type Stuff")
 
-def load(self):
-    return pd.load(self.data_path)
-    
+def load(self, path):
+    target_csv = pd.read_csv(str(path))
+    print(f"Your csv: {target_csv}")
 """
 
         indented_code_block = textwrap.indent(code_block, prefix=" " * indent)
@@ -69,7 +40,7 @@ def load(self):
         return self.getIndent(indent) + f"{node['id']['value']} = {self.handleBinaryExpression(node['init'])}"
     
     def handleClassCreation(self, node, indent):
-        class_code = "\n" + self.getIndent(indent) + "class " + node["name"] + ":" + "\n"
+        class_code = "\n" + self.getIndent(indent) + "import pandas as pd \nclass " + node["name"] + ":" + "\n"
         indent += 4
         class_parameters_code = self.getIndent(indent) + "def __init__(self"
         class_body_code = ""
@@ -78,7 +49,7 @@ def load(self):
         for parameter in node["parameters"]:
             parameters = self.handleVariableDeclaration(parameter, indent)
             var_name, var_type = [x.strip() for x in parameters.split(" = ")]
-            class_parameters_code += f", {var_name}: {var_type}"
+            class_parameters_code += f", {var_name}: {var_type} = 0"
             class_body_code += "\n" + self.getIndent(indent+1) + f"self.{var_name} = {var_type}({var_name})"
             
         target = self.handleVariableDeclaration(node["target"], indent)
@@ -109,17 +80,18 @@ def load(self):
         class_init_code += f"{node['name']} = {node['class_type']}("
 
         indent += 3
+        if (node["declarations"]):
+            for parameter in node["declarations"]:
+                parameters = self.handleVariableDeclaration(parameter, indent)
+                var_name, var_type = [x.strip() for x in parameters.split(" = ")]
+                class_init_code += f"{var_name} = {var_type}, "
+            class_init_code = class_init_code[:-2]
 
-        for parameter in node["declarations"]:
-            parameters = self.handleVariableDeclaration(parameter, indent)
-            var_name, var_type = [x.strip() for x in parameters.split(" = ")]
-            class_init_code += f"{var_name} = {var_type}, "
-        class_init_code = class_init_code[:-2]
         class_init_code += ")"
         return class_init_code
     
     def handleMethodCall(self, node, indent):
-        return self.getIndent(indent) + f"{node['class_type']}.{node['method_name']}()"
+        return self.getIndent(indent) + f"{node['class_type']}.{node['method_name']}({node['parameters']})"
         
     def handleBlock(self, node, indent):
         self.code = ""
@@ -169,9 +141,3 @@ def load(self):
             
         walkAst(node, indent)
         return self.code
-
-if __name__ == "__main__":
-    compiler = Compiler()
-    code = compiler.handleBlock(result, 0)
-    print(code)
-    exec(code)

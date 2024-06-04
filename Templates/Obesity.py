@@ -1,6 +1,7 @@
 
+import pandas as pd 
 class Obesity:
-    def __init__(self, pregnancies: int, glucose: float, bloodPressure: float, skinThickness: float, insulin: float, bmi: float, age: float, diagnosis = None):
+    def __init__(self, pregnancies: int = 0, glucose: float = 0, bloodPressure: float = 0, skinThickness: float = 0, insulin: float = 0, bmi: float = 0, age: float = 0, diagnosis = None):
 
         self.pregnancies = int(pregnancies)
         self.glucose = float(glucose)
@@ -18,6 +19,6 @@ class Obesity:
     def predict(self):
         print("Here Add Data Science Type Stuff")
 
-    def load(self):
-        return pd.load(self.data_path)
-    
+    def load(self, path):
+        target_csv = pd.read_csv(str(path))
+        print(f"Your csv: {target_csv}")

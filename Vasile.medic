@@ -1,17 +1,17 @@
-# Create Template {
-#     name: Obesity
-#     params: {
-#         pregnancies: int
-#         glucose: float
-#         bloodPressure: float
-#         skinThickness: float
-#         insulin: float
-#         bmi: float
-#         age: float
-#     }
-#     target: {diagnosis: float}
-#     data: "C:\Users\Jora\Medic"
-# }
+Create Template {
+    name: Obesity
+    params: {
+        pregnancies: int
+        glucose: float
+        bloodPressure: float
+        skinThickness: float
+        insulin: float
+        bmi: float
+        age: float
+    }
+    target: {diagnosis: float}
+    data: "C:\Users\Jora\Medic"
+}
 
 declare Person = Obesity {
     pregnancies: 1
@@ -23,4 +23,7 @@ declare Person = Obesity {
     age: 1
 }
 
-Person.visualize
+declare Persons = Obesity {}
+Person.load("IRIS.csv")
+
+Person.visualize()

@@ -104,11 +104,14 @@ class Parser:
     def MethodCall(self):
         method_call = self._lookahead["value"]
         self._eat("METHOD_CALL")
-        class_type, method_name = method_call.split(".")
+        class_type, method_parts = method_call.split(".", maxsplit = 1)
+        method_name, parameters = method_parts.replace(")", "").split("(")
+
         return {
             "type": "MethodCall",
             "class_type": class_type,
-            "method_name": method_name 
+            "method_name": method_name,
+            "parameters": parameters
         }
 
     # VariableDeclaration : VariableDeclarator
@@ -214,7 +217,7 @@ class Parser:
             "type": "StringLiteral",
             "value": token["value"]
         }
-    
+
     def _eat(self, tokenType):
         token = self._lookahead
 
@@ -222,7 +225,6 @@ class Parser:
             raise SyntaxError(f"Unexpected end of input, expected {tokenType}. At {self._tokenizer._coursor}") 
     
         if token["type"] != tokenType:
-            print(self._string[self._tokenizer._coursor], self._tokenizer._coursor, self._lookahead)
             val = token["value"]
             raise SyntaxError(f"Unexpected token {val}, expected {tokenType}. At {self._tokenizer._coursor}")
         
