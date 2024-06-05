@@ -10,7 +10,7 @@ class Compiler:
     def ClassMethods(self, indent):
         code_block = """
 def visualize(self):
-    print("Here Add Vizualization Type Stuff")
+    print("Here Add Vizualization Type Stuff or not")
 
 def predict(self):
     print("Here Add Data Science Type Stuff")

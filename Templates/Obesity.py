@@ -1,8 +1,11 @@
+import requests
+import json
+import pandas as pd
 
-import pandas as pd 
+url = "https://b70e-35-194-229-90.ngrok-free.app/"
+
 class Obesity:
-    def __init__(self, pregnancies: int = 0, glucose: float = 0, bloodPressure: float = 0, skinThickness: float = 0, insulin: float = 0, bmi: float = 0, age: float = 0, diagnosis = None):
-
+    def __init__(self, pregnancies=3.845, glucose=121.686763, bloodPressure=72.4, skinThickness=29.153, insulin=155.55, bmi=32.45, age=33.24, diagnosis = None):
         self.pregnancies = int(pregnancies)
         self.glucose = float(glucose)
         self.bloodPressure = float(bloodPressure)
@@ -14,11 +17,33 @@ class Obesity:
         self.data_path = str(r"C:\Users\Jora\Medic")
     
     def visualize(self):
-        print("Here Add Vizualization Type Stuff")
+        print("Here Add Vizualization Type Stuff or not")
+
+       
+        
 
     def predict(self):
-        print("Here Add Data Science Type Stuff")
+        data = {
+            "Pregnancies": self.pregnancies,
+            "Glucose": self.glucose,
+            "BloodPressure": self.bloodPressure,
+            "SkinThickness": self.skinThickness,
+            "Insulin": self.insulin,
+            "BMI": self.bmi,
+            "DiabetesPedigreeFunction": 0.47,
+            "Age": self.age
+        }
 
-    def load(self, path):
-        target_csv = pd.read_csv(str(path))
-        print(f"Your csv: {target_csv}")
+        # Make the POST request with the correct content type
+        response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+
+        # Print the response
+        # print(response.text)
+        status = "Sick"
+        if float(response.text) < 0.5:
+            status = "Healthy"
+        print("    The person is",status)
+
+    def load(self):
+        return pd.load(self.data_path)
+    
