@@ -6,7 +6,7 @@ from Parser import *
 #     print("Error: Please provide a filename as a command-line argument.")
 #     sys.exit(1)
 
-filename = "Vasile.medic" #sys.argv[1]
+filename = sys.argv[1] #"Vasile.medic" 
 
 try:
     with open(filename, 'r') as file:

@@ -9,15 +9,64 @@ class Compiler:
         return " " * indent
     def ClassMethods(self, indent):
         code_block = """
+def to_dict(self):
+    # Initialize an empty dictionary to hold the structured data
+    data = {}
+
+    # Iterate over the instance's __dict__ to populate the structured dictionary
+    for key, value in self.__dict__.items():
+        if (key!="target" and key!="data_path"):
+            # Transform the key to match the desired format and add the value wrapped in another dictionary
+            transformed_key = f"{key[0].upper()+key[1:]}" if key!= "bmi" else key.upper()
+            data[transformed_key] = {str(0): value}
+
+
+
+    return data
+
 def visualize(self):
     print("Here Add Vizualization Type Stuff or not")
 
-def predict(self):
-    print("Here Add Data Science Type Stuff")
 
-def load(self, path):
-    target_csv = pd.read_csv(str(path))
-    print(f"Your csv: {target_csv}")
+
+
+def predict(self):
+    data = self.to_dict()
+
+
+
+    # Make the POST request with the correct content type
+    response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+
+    # Print the response
+    status = "Sick"
+    if float(response.text[1:-2]) < 0.5:
+        status = "Healthy"
+    print("    The person is",status)
+
+def load(self,path):
+    df= pd.read_csv(path)
+    new_df=df.copy()
+    data= pd.DataFrame.to_json(df)
+    response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+
+    result=response.text.replace("[","").replace("]","").split()
+    dic={k:result[k] for k in range(len(result))}
+    for i in dic: 
+        status = "Sick"
+        if float(dic[i]) < 0.5:
+            status = "Healthy"
+        print(f"The person {i} is {status}")
+
+
+    df2=new_df.assign(Outcome=[round(float(x)) for x in result])
+    df2.to_csv("Output.csv")
+    print("Results saved in Output.csv")
+    return 0
+
+
+
+
 """
 
         indented_code_block = textwrap.indent(code_block, prefix=" " * indent)
@@ -40,7 +89,7 @@ def load(self, path):
         return self.getIndent(indent) + f"{node['id']['value']} = {self.handleBinaryExpression(node['init'])}"
     
     def handleClassCreation(self, node, indent):
-        class_code = "\n" + self.getIndent(indent) + "import pandas as pd \nclass " + node["name"] + ":" + "\n"
+        class_code = "\n" + self.getIndent(indent) + "import pandas as pd \nimport json\nimport requests\nurl = 'https://94e4-35-194-229-90.ngrok-free.app/'\nclass " + node["name"] + ":" + "\n"
         indent += 4
         class_parameters_code = self.getIndent(indent) + "def __init__(self"
         class_body_code = ""
