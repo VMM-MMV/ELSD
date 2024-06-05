@@ -32,7 +32,8 @@ def predict(self):
 
     # Print the response
     status = "Sick"
-    if float(response.text[1:-2]) < 0.5:
+    result=response.text.replace("[","").replace("]","")
+    if float(result) < 0.5:
         status = "Healthy"
     print("    The person is",status)
 
@@ -55,6 +56,7 @@ def load(self,path):
     df2.to_csv("Output.csv")
     print("Results saved in Output.csv")
     return 0
+
 """
 
         indented_code_block = textwrap.indent(code_block, prefix=" " * indent)
@@ -77,7 +79,7 @@ def load(self,path):
         return self.getIndent(indent) + f"{node['id']['value']} = {self.handleBinaryExpression(node['init'])}"
     
     def handleClassCreation(self, node, indent):
-        class_code = "\n" + self.getIndent(indent) + "import pandas as pd \nimport json\nimport requests\nurl = 'https://94e4-35-194-229-90.ngrok-free.app/'\nclass " + node["name"] + ":" + "\n"
+        class_code = "\n" + self.getIndent(indent) + "import pandas as pd \nimport json\nimport requests\nurl = 'https://dc58-35-201-131-173.ngrok-free.app/'\nclass " + node["name"] + ":" + "\n"
         indent += 4
         class_parameters_code = self.getIndent(indent) + "def __init__(self"
         class_body_code = ""

@@ -2,35 +2,42 @@ Create Template {
     name: Heart_2 
     params: {
         ST_Slope: str
-        Oldpeak: float
         ExerciseAngina: str
+        ChestPainType: str
+        Oldpeak: float
         MaxHR: int
-        RestingECG: str
+        Sex: str
+        Age: int
         FastingBS: float
         Cholesterol: float
         RestingBP: int
-        ChestPainType: str
-        Sex: str
-        Age: int
+        RestingECG: str
+
     }
     target: {diagnosis: float}
     data: "C:\Users\Jora\Medic"
 }
 
 
-declare Person = Heart2 {
-    ST_Slope: 0
-    Oldpeak: 0
-    ExerciseAngina: 0
+declare Person = Heart_2 {
+    # ST_Slope can be Up, Flat, Down 
+    ST_Slope: 'Up'
+    # Exercise Angine can be N, Y
+    ExerciseAngina: 'N'
+    # Chest Pain Type can be ATA, NAP, ASY, TA
+    ChestPainType: 'ATA'
+    Oldpeak: 10
     MaxHR: 160
-    RestingECG: 0
-    FastingBS: 0
+    # Sex can be M, F
+    Sex: 'M'
+    Age: 10
+    FastingBS: 10
     Cholesterol: 300
     RestingBP: 140
-    ChestPainType: 0
-    Sex: 0
-    Age: 25
+    # Resting ECG can be Normal, ST, LVH
+    RestingECG: 'ST'
 }
 
 
 Person.predict()
+Person.load("IRIS.csv")
