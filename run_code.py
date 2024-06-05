@@ -1,12 +1,12 @@
 import sys
 from Compiler import *
-from Parser import *
+from DebugParser import *
 
 # if len(sys.argv) < 2:
 #     print("Error: Please provide a filename as a command-line argument.")
 #     sys.exit(1)
 
-filename = sys.argv[1] #"Vasile.medic" 
+filename = "Vasile_heart.medic" #sys.argv[1] #"Vasile.medic" 
 
 try:
     with open(filename, 'r') as file:

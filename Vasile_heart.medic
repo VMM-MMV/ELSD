@@ -1,5 +1,5 @@
 Create Template {
-    name: Heart_2
+    name: Heart_2 
     params: {
         ST_Slope: str
         Oldpeak: float
@@ -18,7 +18,7 @@ Create Template {
 }
 
 
-declare Person = Heart {
+declare Person = Heart2 {
     ST_Slope: 0
     Oldpeak: 0
     ExerciseAngina: 0

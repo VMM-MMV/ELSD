@@ -18,7 +18,7 @@ Tokens: list[list[str]] = [
     [r"\A\#.*$", "COMMENT"],
     [r'\A:(?!:)', "DECLARATOR_OPERATOR"],
     [r'\A=(?!=)', "DECLARATOR_OPERATOR"],
-    [r"\A[^\s\W\d]+", "VARIABLE"],
+    [r'\A\w+(?:_\d+)?', "VARIABLE"],
     [r'\A[+\-]', "ADDITIVE_OPERATOR"],
     [r'\A[*\/]', "MULTIPLICATIVE_OPERATOR"],
     [r"\A\d+", "NUMBER"],

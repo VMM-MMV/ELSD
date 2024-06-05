@@ -1,5 +1,4 @@
 from Parser import *
-import json
 import os
 import textwrap
 parser: Parser = Parser()
@@ -20,20 +19,13 @@ def to_dict(self):
             transformed_key = f"{key[0].upper()+key[1:]}" if key!= "bmi" else key.upper()
             data[transformed_key] = {str(0): value}
 
-
-
     return data
 
 def visualize(self):
     print("Here Add Vizualization Type Stuff or not")
 
-
-
-
 def predict(self):
     data = self.to_dict()
-
-
 
     # Make the POST request with the correct content type
     response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
@@ -63,10 +55,6 @@ def load(self,path):
     df2.to_csv("Output.csv")
     print("Results saved in Output.csv")
     return 0
-
-
-
-
 """
 
         indented_code_block = textwrap.indent(code_block, prefix=" " * indent)
