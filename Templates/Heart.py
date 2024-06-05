@@ -1,8 +1,8 @@
 import requests
 import json
+import pandas as pd
 
-
-url = "https://4a45-35-192-182-4.ngrok-free.app/"
+url = "https://7194-104-199-189-113.ngrok-free.app/"
 
 class Heart:
     def __init__(self, ST_Slope=0.6, Oldpeak=0.81, ExerciseAngina=0.37, MaxHR=139.32, RestingECG=0.625, FastingBS=0.255, Cholesterol=195.2, RestingBP=192.73, ChestPainType=1.48, Sex= 0, Age=53):

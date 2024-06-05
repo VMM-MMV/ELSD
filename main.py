@@ -2,10 +2,10 @@ from Parser import *
 import json
 parser: Parser = Parser()
 code: str = r"""
-# declare Person = Obesity {
-#     jora: 2 + 3
-#     vova: "vova"
-# }
+declare Person = Obesity {
+    jora: 2 + 3
+    vova: "vova"
+}
 # Create Template {
 #     name: Obesity
 #     params: {
@@ -20,8 +20,8 @@ code: str = r"""
 #     target: {diagnosis: float}
 #     data: "C:\Users\Jora\Medic"
 # }
-Person.jora
-vova = "6"
+# Person.jora
+# vova = "6"
 """
 result: dict = parser.parse(code)
 

@@ -24,34 +24,35 @@ code: str = r"""
 # }
 
 declare Person = Obesity {
-    pregnancies: 1
+    pregnancies: 2
     glucose: 110
-    bloodPressure: 50
-    skinThickness: 25
-    insulin: 100
+    bloodPressure: 150
+    # skinThickness: 25
+    insulin: 90
     # bmi: 1
     age: 30
 }
 
 Person.predict
 
+
 # declare Person = Heart {
 #     # ST_Slope can be Up, Flat, Down 
 #     ST_Slope: 'Up'
-#     Oldpeak: 3
+#     Oldpeak: 0
 #     # Exercise Angine can be N, Y
-#     ExerciseAngina: 'Y'
-#     MaxHR: 150
+#     ExerciseAngina: 'N'
+#     MaxHR: 160
 #     # Resting ECG can be Normal, ST, LVH
 #     RestingECG: 'Normal'
-#     FastingBS: 120
-#     Cholesterol: 200
-#     RestingBP: 120
+#     FastingBS: 0
+#     Cholesterol: 300
+#     RestingBP: 140
 #     # Chest Pain Type can be ATA, NAP, ASY, TA
 #     ChestPainType: 'ATA'
 #     # Sex can be M, F
 #     Sex: 'M'
-#     Age: 45
+#     Age: 25
 # }
 
 # Person.predict
