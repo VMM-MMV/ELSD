@@ -1,0 +1,36 @@
+Create Template {
+    name: Heart_2
+    params: {
+        ST_Slope: str
+        Oldpeak: float
+        ExerciseAngina: str
+        MaxHR: int
+        RestingECG: str
+        FastingBS: float
+        Cholesterol: float
+        RestingBP: int
+        ChestPainType: str
+        Sex: str
+        Age: int
+    }
+    target: {diagnosis: float}
+    data: "C:\Users\Jora\Medic"
+}
+
+
+declare Person = Heart {
+    ST_Slope: 0
+    Oldpeak: 0
+    ExerciseAngina: 0
+    MaxHR: 160
+    RestingECG: 0
+    FastingBS: 0
+    Cholesterol: 300
+    RestingBP: 140
+    ChestPainType: 0
+    Sex: 0
+    Age: 25
+}
+
+
+Person.predict()
