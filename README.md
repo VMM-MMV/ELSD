@@ -1,3 +1,5 @@
+This is a domain specific language(dsl), aka a custom language for medical analysis.
+
 Grammar:
 ```
 <Program>           ::= "Program" "{" <StatementList> "}"
